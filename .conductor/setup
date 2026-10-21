@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+WORKSPACE_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+REPO_NAME="$(basename "${CONDUCTOR_ROOT_PATH:-$WORKSPACE_ROOT}")"
+WORKSPACE_NAME="${CONDUCTOR_WORKSPACE_NAME:-}"
+SITE_NAME="${REPO_NAME}-${WORKSPACE_NAME}"
+
+cd "$WORKSPACE_ROOT"
+
+composer install
+
+if [ ! -f .env ]; then
+    cp .env.example .env
+fi
+
+if ! grep -q "^APP_KEY=.\+" .env; then
+    php artisan key:generate
+fi
+
+npm install --ignore-scripts
+npm run build
+
+herd link "$SITE_NAME" --isolate="8.3"
+herd secure "$SITE_NAME"
+
+TLD="$(herd tld)"
+APP_URL="https://${SITE_NAME}.${TLD}"
+
+if grep -q "^APP_URL=" .env; then
+    sed -i '' "s|^APP_URL=.*|APP_URL=${APP_URL}|" .env
+else
+    echo "APP_URL=${APP_URL}" >> .env
+fi
+
+echo "Site ready at ${APP_URL}"
+
+php artisan migrate --force
