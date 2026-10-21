@@ -3,3 +3,13 @@
 [[preview_urls]]
 name = ""
 url = "https://specialitytrees-basic-$CONDUCTOR_WORKSPACE_NAME.test"
+
+[scripts]
+setup = ".conductor/setup"
+archive = ".conductor/archive"
+run_mode = "nonconcurrent"
+
+[scripts.run.dev]
+command = ".conductor/run"
+default = true
+icon = "terminal"
