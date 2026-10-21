@@ -21,7 +21,7 @@ fi
 npm install --ignore-scripts
 npm run build
 
-herd link "$SITE_NAME" --isolate="8.3"
+herd link "$SITE_NAME" --isolate="8.4"
 herd secure "$SITE_NAME"
 
 TLD="$(herd tld)"
