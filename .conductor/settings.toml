@@ -1,0 +1,10 @@
+"$schema" = "https://conductor.build/schemas/settings.repo.schema.json"
+
+[scripts]
+archive = ".conductor/archive"
+run_mode = "nonconcurrent"
+
+[scripts.run.dev]
+command = ".conductor/run"
+default = true
+icon = "terminal"
