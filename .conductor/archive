@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+WORKSPACE_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+REPO_NAME="$(basename "${CONDUCTOR_ROOT_PATH:-$WORKSPACE_ROOT}")"
+WORKSPACE_NAME="${CONDUCTOR_WORKSPACE_NAME:-}"
+SITE_NAME="${REPO_NAME}-${WORKSPACE_NAME}"
+
+cd "$WORKSPACE_ROOT"
+
+if herd links 2>/dev/null | grep -q "$SITE_NAME"; then
+    herd unsecure "$SITE_NAME" || true
+    herd unlink "$SITE_NAME" || true
+else
+    echo "Site ${SITE_NAME} not linked in Herd, skipping."
+fi
+
+rm -rf vendor node_modules public/build
+
+echo "Archive complete. .env and credentials preserved."

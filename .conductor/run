@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+WORKSPACE_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+REPO_NAME="$(basename "${CONDUCTOR_ROOT_PATH:-$WORKSPACE_ROOT}")"
+WORKSPACE_NAME="${CONDUCTOR_WORKSPACE_NAME:-}"
+SITE_NAME="${REPO_NAME}-${WORKSPACE_NAME}"
+
+cd "$WORKSPACE_ROOT"
+
+if [ ! -f .env ]; then
+    echo "Error: .env file not found. Run setup first." >&2
+    exit 1
+fi
+
+TLD="$(herd tld)"
+echo "Site running at https://${SITE_NAME}.${TLD}"
+
+exec npx vite --port "${CONDUCTOR_PORT:-5173}"
