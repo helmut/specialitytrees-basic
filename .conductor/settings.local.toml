@@ -1,0 +1,5 @@
+"$schema" = "https://conductor.build/schemas/settings.repo.schema.json"
+
+[[preview_urls]]
+name = ""
+url = "https://specialitytrees-basic-$CONDUCTOR_WORKSPACE_NAME.test"
